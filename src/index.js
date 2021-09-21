@@ -19,13 +19,13 @@ app.use("/banda_estilos", banda_estilos);
 app.use("/eventos", eventos);
 app.use("/evento_tipos", evento_tipos);
 
-app.all("/", function (req, res) {
-  res.send("SUPERGIG API");
-});
-
-app.all("/", function (req, res, next) {
+app.all("*", function (req, res, next) {
   console.log("Alguém acessou!!!");
   next();
+});
+
+app.get("/", function (req, res) {
+  res.send("SUPERGIG API");
 });
 
 app.listen(3000, function () {
