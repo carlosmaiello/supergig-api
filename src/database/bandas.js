@@ -64,7 +64,7 @@ module.exports = {
   inserir,
   alterar,
   remover,
-  dml: {
+  ddl: {
     create,
     drop,
   },

@@ -1,17 +1,17 @@
 const db = require("../database");
 
 const execute = async () => {
-  await db.usuarios.dml.drop();
-  await db.bandas.dml.drop();
-  await db.banda_estilos.dml.drop();
-  await db.eventos.dml.drop();
-  await db.evento_tipos.dml.drop();
+  await db.usuarios.ddl.drop();
+  await db.bandas.ddl.drop();
+  await db.banda_estilos.ddl.drop();
+  await db.eventos.ddl.drop();
+  await db.evento_tipos.ddl.drop();
 
-  await db.usuarios.dml.create();
-  await db.bandas.dml.create();
-  await db.banda_estilos.dml.create();
-  await db.eventos.dml.create();
-  await db.evento_tipos.dml.create();
+  await db.usuarios.ddl.create();
+  await db.bandas.ddl.create();
+  await db.banda_estilos.ddl.create();
+  await db.eventos.ddl.create();
+  await db.evento_tipos.ddl.create();
   console.log("Criou o banco de dados.");
 
   await db.usuarios.inserir({
