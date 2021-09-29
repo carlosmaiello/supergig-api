@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "nodemon ./src/index localhost 3000",
     "start": "node ./src/index localhost 3000",
+    "create_database": "node --unhandled-rejections=strict ./src/commands/create_database",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
