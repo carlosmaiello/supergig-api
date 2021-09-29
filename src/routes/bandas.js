@@ -1,24 +1,26 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function (req, res) {
-    res.send('index');
+const { bandas } = require("../database");
+
+router.get('/', async function (req, res) {
+    res.send(await bandas.todos());
 });
 
-router.post('/', function (req, res) {
-    res.send('create');
+router.post('/', async function (req, res) {
+    res.send(await bandas.inserir(req.body));
 });
 
-router.get('/:id', function (req, res) {
-    res.send(req.params);
+router.get('/:id', async function (req, res) {
+    res.send(await bandas.consultar(req.params.id));
 });
 
-router.put('/:id', function (req, res) {
-    res.send('update');
+router.put('/:id', async function (req, res) {
+    res.send(await bandas.alterar(req.params.id, req.body));
 });
 
-router.delete('/:id', function (req, res) {
-    res.send('delete');
+router.delete('/:id', async function (req, res) {
+    res.send(await bandas.remover(req.params.id));
 });
 
 module.exports = router;

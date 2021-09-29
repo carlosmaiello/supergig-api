@@ -2,10 +2,12 @@ var express = require("express");
 var morgan = require("morgan");
 var app = express();
 
+app.use(express.json());
+
 app.use(morgan('combined'));
 
-var log = require("./middlewares/log");
-app.use(log);
+// var log = require("./middlewares/log");
+// app.use(log);
 
 var usuarios = require("./routes/usuarios");
 var banda_estilos = require("./routes/banda_estilos");
