@@ -4,7 +4,7 @@ var app = express();
 
 app.use(express.json());
 
-app.use(morgan('combined'));
+app.use(morgan("combined"));
 
 // var log = require("./middlewares/log");
 // app.use(log);
@@ -30,26 +30,16 @@ app.get("/", function (req, res) {
   res.send("SUPERGIG API");
 });
 
-
 (async () => {
-  const database = require('./database');
-  const Banda = require('./database/Banda');
-  const BandaEstilo = require('./database/BandaEstilo');
-  const Evento = require('./database/Evento');
-  const EventoTipo = require('./database/EventoTipo');
-  const Usuario = require('./database/Usuario');
+  const { database } = require("./database");
 
   try {
-      const resultado = await database.sync();
-      console.log(resultado);
+    await database.sync();
 
-
-      app.listen(3000, function () {
-        console.log("Servidor rodando na porta 3000");
-      });
+    app.listen(3000, function () {
+      console.log("Servidor rodando na porta 3000");
+    });
   } catch (error) {
-      console.log(error);
+    console.log(error);
   }
 })();
-
-

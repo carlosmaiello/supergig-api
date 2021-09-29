@@ -1,24 +1,45 @@
-var express = require('express');
+var express = require("express");
+const { Usuario } = require("../database");
 var router = express.Router();
 
-router.get('/', function (req, res) {
-    res.send('index');
+router.get("/", async function (req, res) {
+  res.send(await Usuario.findAll());
 });
 
-router.post('/', function (req, res) {
-    res.send('create');
+router.post("/", async function (req, res) {
+  res.send(await Usuario.create(req.body));
 });
 
-router.get('/:id', function (req, res) {
-    res.send('get');
+router.get("/:id", async function (req, res) {
+  var usuario = await Usuario.findByPk(req.params.id);
+  try {
+    if (usuario == null) throw new Error("Usuário não existe");
+    
+    res.send(usuario);
+  } catch (e) {
+    res.send({ erro: e.message });
+  }
 });
 
-router.put('/:id', function (req, res) {
-    res.send('update');
+router.put("/:id", async function (req, res) {
+  var usuario = await Usuario.findByPk(req.params.id);
+  try {
+    if (usuario == null) throw new Error("Usuário não existe");
+
+    res.send(await usuario.update(req.body));
+  } catch (e) {
+    res.send({ erro: e.message });
+  }
 });
 
-router.delete('/:id', function (req, res) {
-    res.send('delete');
+router.delete("/:id", async function (req, res) {
+  var usuario = await Usuario.findByPk(req.params.id);
+  try {
+    if (usuario == null) throw new Error("Usuário não existe");
+    res.send(await usuario.destroy());
+  } catch (e) {
+    res.send({ erro: e.message });
+  }
 });
 
 module.exports = router;
