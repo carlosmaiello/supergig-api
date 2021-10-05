@@ -31,15 +31,7 @@ app.get("/", function (req, res) {
 });
 
 (async () => {
-  const { database } = require("./database");
-
-  try {
-    await database.sync();
-
-    app.listen(3000, function () {
-      console.log("Servidor rodando na porta 3000");
-    });
-  } catch (error) {
-    console.log(error);
-  }
+  app.listen(3000, function () {
+    console.log("Servidor rodando na porta 3000");
+  });
 })();

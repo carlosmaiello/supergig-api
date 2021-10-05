@@ -1,5 +1,5 @@
 var express = require("express");
-const { Usuario } = require("../database");
+const { Usuario, Endereco, Banda } = require("../models");
 var router = express.Router();
 
 router.get("/", async function (req, res) {
@@ -7,28 +7,51 @@ router.get("/", async function (req, res) {
 });
 
 router.post("/", async function (req, res) {
-  res.send(await Usuario.create(req.body));
+  try {
+    var usuario = await Usuario.create(req.body, { include: [Endereco] });
+    res.send(usuario);
+  } catch (e) {
+    res.status(500).send(e);
+  }
 });
 
 router.get("/:id", async function (req, res) {
-  var usuario = await Usuario.findByPk(req.params.id);
+  var usuario = await Usuario.findByPk(req.params.id, {
+    include: [Endereco, Banda],
+  });
   try {
     if (usuario == null) throw new Error("Usuário não existe");
-    
+
     res.send(usuario);
   } catch (e) {
-    res.send({ erro: e.message });
+    res.status(500).send({ erro: e.message });
   }
 });
 
 router.put("/:id", async function (req, res) {
-  var usuario = await Usuario.findByPk(req.params.id);
+  var usuario = await Usuario.findByPk(req.params.id, { include: [Endereco] });
+
   try {
     if (usuario == null) throw new Error("Usuário não existe");
 
-    res.send(await usuario.update(req.body));
+
+    if (req.body.endereco) {
+      if (!usuario.endereco) {
+        usuario.setEndereco(await Endereco.create(req.body.endereco));
+      }
+      else {
+        console.log(usuario.endereco);
+        await usuario.endereco.update(req.body.endereco);
+      }
+    }
+
+    await usuario.update(req.body, { include: [Endereco] });
+
+    await usuario.reload({ include: [Endereco] });
+
+    res.send(usuario);
   } catch (e) {
-    res.send({ erro: e.message });
+    res.status(500).send({ erro: e.message });
   }
 });
 
@@ -36,9 +59,12 @@ router.delete("/:id", async function (req, res) {
   var usuario = await Usuario.findByPk(req.params.id);
   try {
     if (usuario == null) throw new Error("Usuário não existe");
-    res.send(await usuario.destroy());
+
+    await usuario.destroy();
+    
+    res.send(true);
   } catch (e) {
-    res.send({ erro: e.message });
+    res.status(500).send({ erro: e.message });
   }
 });
 

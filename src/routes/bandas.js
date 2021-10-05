@@ -1,24 +1,48 @@
-var express = require('express');
+var express = require("express");
+const { BandaEstilo, Endereco, Usuario, Banda } = require("../models");
 var router = express.Router();
 
-router.get('/', function (req, res) {
-    res.send('index');
+router.get("/", async function (req, res) {
+  res.send(await Banda.findAll({ include: [Usuario, Endereco, BandaEstilo] }));
 });
 
-router.post('/', function (req, res) {
-    res.send('create');
+router.post("/", async function (req, res) {
+  res.send(await Banda.create(req.body, { include: [Endereco, BandaEstilo] }));
 });
 
-router.get('/:id', function (req, res) {
-    res.send(req.params);
+router.get("/:id", async function (req, res) {
+  var banda = await Banda.findByPk(req.params.id, {
+    include: [Usuario, Endereco, BandaEstilo],
+  });
+  try {
+    if (banda == null) throw new Error("Banda não existe");
+
+    res.send(banda);
+  } catch (e) {
+    res.status(500).send({ erro: e.message });
+  }
 });
 
-router.put('/:id', function (req, res) {
-    res.send('update');
+router.put("/:id", async function (req, res) {
+  var banda = await Banda.findByPk(req.params.id);
+  try {
+    if (banda == null) throw new Error("Banda não existe");
+
+    res.send(await banda.update(req.body));
+  } catch (e) {
+    res.status(500).send({ erro: e.message });
+  }
 });
 
-router.delete('/:id', function (req, res) {
-    res.send('delete');
+router.delete("/:id", async function (req, res) {
+  var banda = await Banda.findByPk(req.params.id);
+  try {
+    if (banda == null) throw new Error("Banda não existe");
+    await banda.destroy();
+    res.send(true);
+  } catch (e) {
+    res.status(500).send({ erro: e.message });
+  }
 });
 
 module.exports = router;
