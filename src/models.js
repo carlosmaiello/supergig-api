@@ -2,6 +2,29 @@ const Sequelize = require("sequelize");
 
 const database = require('./database');
 
+const Usuario = database.define("usuarios", {
+  id: {
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV1,
+    primaryKey: true
+  },
+  nome: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    isEmail: true, 
+    unique: true
+  },
+  senha: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    is: /^[0-9a-f]{64}$/i
+  },
+});
+
 const Banda = database.define("bandas", {
     id: {
       type: Sequelize.UUID,
@@ -120,29 +143,6 @@ const Banda = database.define("bandas", {
     nome: {
       type: Sequelize.STRING,
       allowNull: false,
-    },
-  });
-  
-  const Usuario = database.define("usuarios", {
-    id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV1,
-      primaryKey: true
-    },
-    nome: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    email: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      isEmail: true, 
-      unique: true
-    },
-    senha: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      is: /^[0-9a-f]{64}$/i
     },
   });
   
