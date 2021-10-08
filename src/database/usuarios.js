@@ -1,5 +1,16 @@
 const connect = require("./connect");
 
+async function create() {
+  const conn = await connect();
+  const sql = `CREATE TABLE IF NOT EXISTS usuarios ( 
+        id int not null auto_increment primary key, 
+        nome varchar(255) not null,
+        email varchar(255) not null,
+        senha varchar(50) not null
+    );`;
+  return await conn.query(sql);
+}
+
 async function todos() {
   const conn = await connect();
   const [rows] = await conn.query("select * from usuarios");
@@ -36,17 +47,6 @@ async function remover(id) {
   const values = [id];
   const [details] = await conn.query(sql, values);
   return details.affectedRows > 0;
-}
-
-async function create() {
-  const conn = await connect();
-  const sql = `CREATE TABLE IF NOT EXISTS usuarios ( 
-        id int not null auto_increment primary key, 
-        nome varchar(255) not null,
-        email varchar(255) not null,
-        senha varchar(50) not null
-    );`;
-  return await conn.query(sql);
 }
 
 async function drop() {
