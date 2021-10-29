@@ -1,16 +1,18 @@
 var express = require("express");
 const { BandaEstilo, Endereco, Usuario, Banda } = require("../models");
 var router = express.Router();
+var auth = require('../auth');
 
-router.get("/", async function (req, res) {
+router.get("/", auth, async function (req, res) {
   res.send(await Banda.findAll({ include: [Usuario, Endereco, BandaEstilo] }));
 });
 
-router.post("/", async function (req, res) {
-  res.send(await Banda.create(req.body, { include: [Endereco, BandaEstilo] }));
+router.post("/", auth, async function (req, res) {
+  const dados = {...req.body, usuarioId: req.usuarioId};
+  res.send(await Banda.create(dados, { include: [Endereco, BandaEstilo] }));
 });
 
-router.get("/:id", async function (req, res) {
+router.get("/:id", auth, async function (req, res) {
   var banda = await Banda.findByPk(req.params.id, {
     include: [Usuario, Endereco, BandaEstilo],
   });
@@ -23,7 +25,7 @@ router.get("/:id", async function (req, res) {
   }
 });
 
-router.put("/:id", async function (req, res) {
+router.put("/:id", auth, async function (req, res) {
   var banda = await Banda.findByPk(req.params.id);
   try {
     if (banda == null) throw new Error("Banda não existe");
@@ -34,7 +36,7 @@ router.put("/:id", async function (req, res) {
   }
 });
 
-router.delete("/:id", async function (req, res) {
+router.delete("/:id", auth, async function (req, res) {
   var banda = await Banda.findByPk(req.params.id);
   try {
     if (banda == null) throw new Error("Banda não existe");

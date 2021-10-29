@@ -1,12 +1,13 @@
 var express = require("express");
+const auth = require("../auth");
 const { BandaEstilo } = require("../models");
 var router = express.Router();
 
-router.get("/", async function (req, res) {
+router.get("/", auth, async function (req, res) {
   res.send(await BandaEstilo.findAll());
 });
 
-router.post("/", async function (req, res) {
+router.post("/", auth, async function (req, res) {
   try {
     res.send(await BandaEstilo.create(req.body));
   } catch (e) {
@@ -14,7 +15,7 @@ router.post("/", async function (req, res) {
   }
 });
 
-router.get("/:id", async function (req, res) {
+router.get("/:id", auth, async function (req, res) {
   var estilo = await BandaEstilo.findByPk(req.params.id);
   try {
     if (estilo == null) throw new Error("Estilo não existe");
@@ -25,7 +26,7 @@ router.get("/:id", async function (req, res) {
   }
 });
 
-router.put("/:id", async function (req, res) {
+router.put("/:id", auth, async function (req, res) {
   var estilo = await BandaEstilo.findByPk(req.params.id);
   try {
     if (estilo == null) throw new Error("Estilo não existe");
@@ -38,7 +39,7 @@ router.put("/:id", async function (req, res) {
   }
 });
 
-router.delete("/:id", async function (req, res) {
+router.delete("/:id", auth, async function (req, res) {
   var estilo = await BandaEstilo.findByPk(req.params.id);
   try {
     if (estilo == null) throw new Error("Estilo não existe");

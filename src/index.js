@@ -1,5 +1,8 @@
+require("dotenv-safe").config();
+
 var express = require("express");
 var morgan = require("morgan");
+
 var app = express();
 
 app.use(express.json());
@@ -14,6 +17,7 @@ var banda_estilos = require("./routes/banda_estilos");
 var bandas = require("./routes/bandas");
 var eventos = require("./routes/eventos");
 var evento_tipos = require("./routes/evento_tipos");
+const database = require("./database");
 
 app.use("/usuarios", usuarios);
 app.use("/bandas", bandas);
@@ -30,8 +34,8 @@ app.get("/", function (req, res) {
   res.send("SUPERGIG API");
 });
 
-(async () => {
+database.sync().then(() => {
   app.listen(3000, function () {
     console.log("Servidor rodando na porta 3000");
   });
-})();
+})

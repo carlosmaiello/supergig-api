@@ -1,25 +1,29 @@
 var express = require("express");
-const { Evento, Endereco, EventoTipo } = require("../models");
+const auth = require("../auth");
+const { Evento, Endereco, EventoTipo, Usuario } = require("../models");
 var router = express.Router();
 
-router.get("/", async function (req, res) {
+router.get("/", auth, async function (req, res) {
   res.send(
     await Evento.findAll({
-      include: [Endereco, EventoTipo],
+      include: [Usuario, Endereco, EventoTipo],
     })
   );
 });
 
-router.post("/", async function (req, res) {
+router.post("/", auth, async function (req, res) {
+  const dados = {...req.body, usuarioId: req.usuarioId};
   try {
-    res.send(await Evento.create(req.body));
+    res.send(await Evento.create(dados));
   } catch (e) {
     res.status(500).send(e);
   }
 });
 
-router.get("/:id", async function (req, res) {
-  var evento = await Evento.findByPk(req.params.id);
+router.get("/:id", auth, async function (req, res) {
+  var evento = await Evento.findByPk(req.params.id, {
+    include: [Endereco, EventoTipo, Usuario],
+  });
   try {
     if (evento == null) throw new Error("Evento não existe");
 
@@ -29,7 +33,7 @@ router.get("/:id", async function (req, res) {
   }
 });
 
-router.put("/:id", async function (req, res) {
+router.put("/:id", auth, async function (req, res) {
   var evento = await Evento.findByPk(req.params.id);
   try {
     if (evento == null) throw new Error("Evento não existe");
@@ -42,7 +46,7 @@ router.put("/:id", async function (req, res) {
   }
 });
 
-router.delete("/:id", async function (req, res) {
+router.delete("/:id", auth, async function (req, res) {
   var evento = await Evento.findByPk(req.params.id);
   try {
     if (evento == null) throw new Error("Evento não existe");
