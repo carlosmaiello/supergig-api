@@ -1,9 +1,6 @@
 if (!process.env.NODE_ENV)
   require("dotenv-safe").config();
 
-  console.log(process.env.DATABASE_URL);
-
-
 var express = require("express");
 var morgan = require("morgan");
 
