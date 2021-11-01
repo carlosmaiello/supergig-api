@@ -3,17 +3,22 @@ const { Usuario, Endereco, Banda } = require("../models");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 var auth = require("../auth");
+const { encrypt } = require("../crypt");
 
 router.get("/", auth, async function (req, res) {
-  res.send(await Usuario.findAll());
+  res.send(await Usuario.findAll({ include: [Endereco] }));
 });
 
 router.post("/", async function (req, res) {
   try {
+    if (req.body.senha) {
+      req.body.senha = encrypt(req.body.senha);
+    }
+
     var usuario = await Usuario.create(req.body, { include: [Endereco] });
     res.send(usuario);
   } catch (e) {
-    res.status(500).send(e);
+    res.status(500).send({ erro: e.message, details: e });
   }
 });
 
@@ -35,6 +40,10 @@ router.put("/:id", auth, async function (req, res) {
 
   try {
     if (usuario == null) throw new Error("Usuário não existe");
+
+    if (req.body.senha) {
+      req.body.senha = encrypt(req.body.senha);
+    }
 
     if (req.body.endereco) {
       if (!usuario.endereco) {
@@ -76,7 +85,7 @@ router.post("/login", async (req, res, next) => {
     var usuario = await Usuario.findOne({
       where: {
         email: req.body.email,
-        senha: req.body.senha,
+        senha: encrypt(req.body.senha),
       },
     });
 

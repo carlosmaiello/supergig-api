@@ -16,7 +16,7 @@ router.post("/", auth, async function (req, res) {
   try {
     res.send(await Evento.create(dados));
   } catch (e) {
-    res.status(500).send(e);
+    res.status(500).send({ erro: e.message, details: e });
   }
 });
 
