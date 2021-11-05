@@ -1,4 +1,5 @@
-require("dotenv-safe").config();
+if (!process.env.NODE_ENV)
+  require("dotenv-safe").config();
 
 var express = require("express");
 var morgan = require("morgan");

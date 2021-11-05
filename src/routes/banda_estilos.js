@@ -11,7 +11,7 @@ router.post("/", auth, async function (req, res) {
   try {
     res.send(await BandaEstilo.create(req.body));
   } catch (e) {
-    res.status(500).send(e);
+    res.status(500).send({ erro: e.message, details: e });
   }
 });
 
