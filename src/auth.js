@@ -5,7 +5,7 @@ module.exports = function (req, res, next) {
 
     if (!token) return res.status(401).json({ auth: false, message: 'Nenhum token fornecido.' });
 
-    token = token.substring("Bearer ".length);
+    token = token.substring("JWT ".length);
 
     jwt.verify(token, process.env.SECRET, function(err, decoded) {
       if (err) return res.status(500).json({ auth: false, message: 'Falha ao autenticar o token.' });

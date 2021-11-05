@@ -83,7 +83,7 @@ router.post("/login", async (req, res, next) => {
     if (usuario == null) throw new Error("E-mail ou senha inválidos");
 
     const token = jwt.sign({ id: usuario.id }, process.env.SECRET, {
-      expiresIn: 300, // expires in 5min
+      expiresIn: 3000, // expires in 5min
     });
     return res.send({ auth: true, token: token });
   } catch (e) {
